@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprite Sheet Calculator — LaunchTower</title>
+<meta name="description" content="Calculate sprite sheet dimensions, tile counts, and export sizes for your pixel-art game. Free, no sign-up.">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e4e6f0;
+    --muted: #8b8fa8;
+    --accent: #6c8cff;
+    --accent2: #a78bfa;
+    --success: #34d399;
+    --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  header a:hover { color: var(--accent); }
+  .brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+  main {
+    flex: 1;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card h2 {
+    font-size: 1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+  .field input[type=number] {
+    -moz-appearance: textfield;
+  }
+  .field input::-webkit-inner-spin-button,
+  .field input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .result-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .result-box .label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .result-box .value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .result-box .unit {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .preview {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .preview canvas {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    image-rendering: pixelated;
+  }
+  .preview-info {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .preview-info strong { color: var(--text); }
+  .copy-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .copy-btn:hover { opacity: 0.9; }
+  .copy-btn.copied { background: var(--success); }
+  .note {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .note code {
+    background: var(--bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+  }
+  footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">LaunchTower</span>
+  <a href="/">← Back to all tools</a>
+</header>
+<main>
+  <h1>Sprite Sheet Calculator</h1>
+  <p class="subtitle">
+    Plan your sprite sheet layout before you start drawing. Enter your tile size and grid dimensions,
+    and get the exact pixel dimensions, tile count, and a visual preview.
+  </p>
+
+  <div class="card">
+    <h2>Input</h2>
+    <div class="grid">
+      <div class="field">
+        <label for="tileW">Tile width (px)</label>
+        <input type="number" id="tileW" value="16" min="1" max="512">
+      </div>
+      <div class="field">
+        <label for="tileH">Tile height (px)</label>
+        <input type="number" id="tileH" value="16" min="1" max="512">
+      </div>
+      <div class="field">
+        <label for="cols">Columns</label>
+        <input type="number" id="cols" value="8" min="1" max="64">
+      </div>
+      <div class="field">
+        <label for="rows">Rows</label>
+        <input type="number" id="rows" value="8" min="1" max="64">
+      </div>
+      <div class="field">
+        <label for="padding">Padding (px)</label>
+        <input type="number" id="padding" value="0" min="0" max="32">
+      </div>
+      <div class="field">
+        <label for="spacing">Spacing (px)</label>
+        <input type="number" id="spacing" value="0" min="0" max="32">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Results</h2>
+    <div class="results">
+      <div class="result-box">
+        <div class="label">Sheet width</div>
+        <div class="value" id="resW">—</div>
+        <div class="unit">px</div>
+      </div>
+      <div class="result-box">
+        <div class="label">Sheet height</div>
+        <div class="value" id="resH">—</div>
+        <div class="unit">px</div>
+      </div>
+      <div class="result-box">
+        <div class="label">Total tiles</div>
+        <div class="value" id="resTiles">—</div>
+        <div class="unit">tiles</div>
+      </div>
+      <div class="result-box">
+        <div class="label">Total pixels</div>
+        <div class="value" id="resPx">—</div>
+        <div class="unit">px²</div>
+      </div>
+    </div>
+    <div class="preview">
+      <canvas id="previewCanvas" width="128" height="128"></canvas>
+      <div class="preview-info" id="previewInfo"></div>
+    </div>
+    <button class="copy-btn" id="copyBtn">Copy CSS variables</button>
+    <p class="note">
+      CSS variables you can paste into your project:
+      <code>--sheet-w</code>, <code>--sheet-h</code>, <code>--tile-w</code>, <code>--tile-h</code>,
+      <code>--cols</code>, <code>--rows</code>, <code>--padding</code>, <code>--spacing</code>
+    </p>
+  </div>
+</main>
+<footer>
+  LaunchTower — free tools for pixel-art &amp; game dev ·
+  <a href="/">All tools</a> ·
+  <a href="https://launchtower.itch.io">itch.io</a>
+</footer>
+
+<script>
+(function() {
+  const $ = id => document.getElementById(id);
+  const inputs = ['tileW','tileH','cols','rows','padding','spacing'];
+
+  function calc() {
+    const tw = Math.max(1, parseInt($('tileW').value) || 16);
+    const th = Math.max(1, parseInt($('tileH').value) || 16);
+    const cols = Math.max(1, parseInt($('cols').value) || 8);
+    const rows = Math.max(1, parseInt($('rows').value) || 8);
+    const pad = Math.max(0, parseInt($('padding').value) || 0);
+    const sp = Math.max(0, parseInt($('spacing').value) || 0);
+
+    const sheetW = pad * 2 + cols * tw + (cols - 1) * sp;
+    const sheetH = pad * 2 + rows * th + (rows - 1) * sp;
+    const tiles = cols * rows;
+    const totalPx = sheetW * sheetH;
+
+    $('resW').textContent = sheetW.toLocaleString();
+    $('resH').textContent = sheetH.toLocaleString();
+    $('resTiles').textContent = tiles.toLocaleString();
+    $('resPx').textContent = totalPx.toLocaleString();
+
+    // Preview: draw a grid
+    const canvas = $('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    const maxDim = 128;
+    const scale = Math.min(maxDim / sheetW, maxDim / sheetH);
+    canvas.width = Math.round(sheetW * scale);
+    canvas.height = Math.round(sheetH * scale);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#1a1d27';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const colors = ['#6c8cff','#a78bfa','#34d399','#fbbf24','#f87171','#60a5fa','#f472b6','#4ade80'];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = (pad + c * (tw + sp)) * scale;
+        const y = (pad + r * (th + sp)) * scale;
+        const w = tw * scale;
+        const h = th * scale;
+        ctx.fillStyle = colors[(r * cols + c) % colors.length];
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(x, y, w, h);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    $('previewInfo').innerHTML =
+      '<strong>' + cols + ' × ' + rows + '</strong> grid<br>' +
+      'Tile: ' + tw + ' × ' + th + ' px<br>' +
+      'Sheet: ' + sheetW + ' × ' + sheetH + ' px<br>' +
+      (pad ? 'Padding: ' + pad + ' px<br>' : '') +
+      (sp ? 'Spacing: ' + sp + ' px' : '');
+
+    // Store CSS vars for copy
+    window._cssVars =
+      '--sheet-w: ' + sheetW + 'px;\n' +
+      '--sheet-h: ' + sheetH + 'px;\n' +
+      '--tile-w: ' + tw + 'px;\n' +
+      '--tile-h: ' + th + 'px;\n' +
+      '--cols: ' + cols + ';\n' +
+      '--rows: ' + rows + ';\n' +
+      '--padding: ' + pad + 'px;\n' +
+      '--spacing: ' + sp + 'px;';
+  }
+
+  inputs.forEach(id => $(id).addEventListener('input', calc));
+  calc();
+
+  $('copyBtn').addEventListener('click', function() {
+    navigator.clipboard.writeText(window._cssVars).then(() => {
+      this.textContent = 'Copied!';
+      this.classList.add('copied');
+      setTimeout(() => {
+        this.textContent = 'Copy CSS variables';
+        this.classList.remove('copied');
+      }, 2000);
+    });
+  });
+})();
+</script>
+</body>
+</html>
