@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaunchTower — free games, pixel art &amp; tools</title>
+<meta name="description" content="LaunchTower: free browser games, pixel-art asset packs, and handy web tools. Made fast, made free.">
+<style>
+  :root{
+    --bg:#0b0e14;
+    --bg2:#11151f;
+    --card:#151b28;
+    --card-hover:#1a2233;
+    --border:#232c3f;
+    --text:#e8ecf4;
+    --muted:#9aa5bc;
+    --accent:#5eead4;
+    --accent2:#818cf8;
+    --btn:#1f2a44;
+    --btn-hover:#2a3a63;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #16203a 0%, var(--bg) 55%) fixed, var(--bg);
+    color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  header.site{
+    position:sticky;top:0;z-index:10;
+    background:rgba(11,14,20,.82);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .logo{font-weight:800;letter-spacing:.4px;font-size:1.05rem}
+  .logo span{color:var(--accent)}
+  .nav a.link{color:var(--muted);margin-left:18px;font-size:.92rem}
+  .nav a.link:hover{color:var(--text);text-decoration:none}
+
+  .hero{text-align:center;padding:72px 0 56px}
+  .hero h1{
+    font-size:clamp(2rem,5.5vw,3.4rem);
+    font-weight:850;letter-spacing:-.5px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{color:var(--muted);max-width:560px;margin:14px auto 0;font-size:1.05rem}
+  .hero .cta{
+    display:inline-block;margin-top:26px;padding:12px 22px;border-radius:10px;
+    background:var(--btn);color:var(--text);font-weight:600;border:1px solid var(--border);
+  }
+  .hero .cta:hover{background:var(--btn-hover);text-decoration:none}
+
+  section{padding:44px 0}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:22px}
+  .sec-head h2{font-size:1.5rem;font-weight:750}
+  .sec-head .tag{
+    font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:4px 10px;
+  }
+  .sec-head .desc{color:var(--muted);font-size:.92rem;margin-left:auto}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px;
+    display:flex;flex-direction:column;gap:12px;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .card:hover{transform:translateY(-3px);background:var(--card-hover);border-color:#2f3b58}
+  .card .icon{
+    width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;background:linear-gradient(135deg,#1c2740,#141b2c);border:1px solid var(--border);
+  }
+  .card h3{font-size:1.12rem;font-weight:720}
+  .card p{color:var(--muted);font-size:.94rem;flex:1}
+  .card .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+  .badge{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .btn{
+    display:inline-block;padding:9px 16px;border-radius:9px;font-size:.9rem;font-weight:650;
+    background:var(--btn);color:var(--text);border:1px solid var(--border);white-space:nowrap;
+  }
+  .btn:hover{background:var(--btn-hover);text-decoration:none}
+  .btn.primary{background:linear-gradient(90deg,#0f766e,#4338ca);border-color:transparent}
+  .btn.primary:hover{filter:brightness(1.15)}
+
+  footer{
+    border-top:1px solid var(--border);
+    margin-top:30px;padding:34px 0 46px;text-align:center;color:var(--muted);font-size:.92rem;
+  }
+  footer .brand{color:var(--text);font-weight:700}
+  footer .made{margin-top:8px;font-size:.82rem;opacity:.75}
+
+  @media (max-width:560px){
+    .hero{padding:52px 0 40px}
+    .sec-head .desc{display:none}
+    .nav a.link{margin-left:12px;font-size:.85rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="logo">Launch<span>Tower</span></div>
+    <nav>
+      <a class="link" href="#games">Games</a>
+      <a class="link" href="#tools">Tools</a>
+      <a class="link" href="#assets">Assets</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>LaunchTower</h1>
+    <p>Free games, pixel art &amp; tools — made fast, made free. Play in your browser, grab assets, and use handy tools. No sign-up, no paywall.</p>
+    <a class="cta" href="#games">Explore the catalog &darr;</a>
+  </div>
+
+  <section id="games">
+    <div class="sec-head">
+      <span class="tag">Play</span>
+      <h2>Games</h2>
+      <span class="desc">Browser games — click and play, no install.</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🚀</div>
+        <h3>Star Drift</h3>
+        <p>A fast, neon space-drift arcade game. Dodge, weave, and chase high scores in your browser.</p>
+        <div class="row">
+          <span class="badge">Browser game</span>
+          <a class="btn primary" href="https://launchtower.itch.io/star-drift" target="_blank" rel="noopener">Play now &rarr;</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🌊</div>
+        <h3>Neon Cascade</h3>
+        <p>A glowing cascade arcade game with tight controls and a satisfying flow. Built to run anywhere.</p>
+        <div class="row">
+          <span class="badge">Browser game</span>
+          <a class="btn primary" href="https://pennypenguinapp-beep.github.io/launchtower-neon-cascade/" target="_blank" rel="noopener">Play now &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools">
+    <div class="sec-head">
+      <span class="tag">Use</span>
+      <h2>Tools</h2>
+      <span class="desc">Free web tools — drop a file in, get results out.</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🎨</div>
+        <h3>Pixel Palette Extractor</h3>
+        <p>Drop any image and extract a clean, quantized color palette with HEX/RGB, CSS variables, and .gpl export.</p>
+        <div class="row">
+          <span class="badge">Free web tool</span>
+          <a class="btn primary" href="https://pennypenguinapp-beep.github.io/launchtower-palette-extractor/" target="_blank" rel="noopener">Open tool &rarr;</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🔪</div>
+        <h3>Sprite Sheet Slicer</h3>
+        <p>Slice any sprite sheet into individual tiles with a live grid preview, then download them one by one or all at once.</p>
+        <div class="row">
+          <span class="badge">Free web tool</span>
+          <a class="btn primary" href="https://pennypenguinapp-beep.github.io/launchtower-sprite-slicer/" target="_blank" rel="noopener">Open tool &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="assets">
+    <div class="sec-head">
+      <span class="tag">Build</span>
+      <h2>Asset Packs</h2>
+      <span class="desc">Pixel-art assets ready to drop into your game.</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🧱</div>
+        <h3>Dungeon Tile Pack</h3>
+        <p>16 hand-made pixel-art dungeon tiles for your next game — walls, floors, and details in a cohesive style.</p>
+        <div class="row">
+          <span class="badge">Pixel-art pack</span>
+          <a class="btn primary" href="https://launchtower.itch.io/dungeon-tile-pack" target="_blank" rel="noopener">Get the pack &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><span class="brand">LaunchTower</span> — free games, pixel art &amp; tools, made fast.</div>
+    <div>itch.io: <a href="https://launchtower.itch.io" target="_blank" rel="noopener">https://launchtower.itch.io</a></div>
+    <div class="made">© LaunchTower. All products free to use. Built with plain HTML/CSS/JS.</div>
+  </div>
+</footer>
+
+<script>
+  // Smooth-scroll offset for the sticky header (no external libs, no network).
+  (function(){
+    var links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href');
+        if(id.length < 2) return;
+        var el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        var top = el.getBoundingClientRect().top + window.pageYOffset - 64;
+        window.scrollTo({top: top, behavior: 'smooth'});
+      });
+    });
+  })();
+</script>
+</body>
+</html>
